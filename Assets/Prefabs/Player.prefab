@@ -499,8 +499,11 @@ MonoBehaviour:
     stopOnClamp: 1
   hiddenTabletOffset: {x: -0.27, y: -0.32, z: 0.1}
   hiddenTabletRotation: {x: 0, y: 0.70710677, z: 0, w: -0.70710677}
-  cableTailDefaultPosition: {x: 0.13, y: -0.03, z: 0}
-  cableTailDefaultRotation: {x: 0, y: 0, z: 1, w: -0.000015064082}
+  cableDefaultLength: 0.3
+  cableTailDefaultRotation: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
+  cableTailMaxRotOffset: 30
+  cableTailAngleRotSpeed: 10
+  cableTailForceFactor: 0.5
   cableTransitionCurve:
     curve:
       serializedVersion: 2
@@ -529,6 +532,8 @@ MonoBehaviour:
     stopOnClamp: 1
   cableTailAimOffset: {x: 0, y: -0.1, z: 0.5}
   cableTailAimRotation: {x: 0.27059805, y: 0.65328145, z: 0.27059805, w: 0.65328145}
+  cableTailPrevPosition: {x: 0, y: 0, z: 0}
+  cableTailAngleRotOffset: {x: 0, y: 0, z: 0, w: 1}
 --- !u!114 &9218607173800617309
 MonoBehaviour:
   m_ObjectHideFlags: 0

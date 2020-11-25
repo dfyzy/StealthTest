@@ -92,6 +92,27 @@ public static class StolenMathf
 	{
 		return Mathf.Log(f + Mathf.Sqrt(f*f - 1));
 	}
+
+	public static Vector3 MinSize(Vector3 v, float f)
+	{
+		float size = v.magnitude;
+		return size > f ? v*(f/size) : v;
+	}
+
+	public static Quaternion FromAngleAxis(Vector3 angleAxis)
+	{
+		float size = angleAxis.magnitude;
+		return size > 0.00001f ? Quaternion.AngleAxis(Mathf.Rad2Deg*size, angleAxis/size) : Quaternion.identity;
+	}
+
+	public static Vector3 ToAngleAxis(Quaternion quat)
+	{
+		float angle; Vector3 axis;
+		quat.ToAngleAxis(out angle, out axis);
+
+		angle = UnwindAngleDegrees(angle);
+		return angle == 0.0f ? Vector3.zero : axis*(Mathf.Deg2Rad*angle);
+	}
 //
 
 	//https://pomax.github.io/bezierinfo/

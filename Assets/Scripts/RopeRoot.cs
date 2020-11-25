@@ -56,6 +56,17 @@ public class RopeRoot : MonoBehaviour
 		return chain[lastChainIndex];
 	}
 
+	public Vector3 GetFirstControlPoint(float factor = 1.0f)
+	{
+		return chain[0].position + chain[0].rotation*(localForward*paramPointDistance*factor);
+	}
+
+	public Vector3 GetLastControlPoint(float factor = 1.0f)
+	{
+		Transform tail = GetTail();
+		return tail.position - tail.rotation*(localForward*paramPointDistance*factor);
+	}
+
 	void ApplyRopePosition(Func<float, Vector3> func)
 	{
 		for (int i = chain.Count - 1; i >= 1; i--)
@@ -107,8 +118,8 @@ public class RopeRoot : MonoBehaviour
 		}
 		else*/
 		{
-			Vector3 point1 = chain[0].position + chain[0].rotation*(localForward*paramPointDistance);
-			Vector3 point2 = tail.position - tail.rotation*(localForward*paramPointDistance);
+			Vector3 point1 = GetFirstControlPoint();
+			Vector3 point2 = GetLastControlPoint();
 
 			ApplyRopePosition(f => StolenMathf.Bezier.Calc3(f, transform.position, point1, point2, tail.position));
 		}

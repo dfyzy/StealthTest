@@ -4422,21 +4422,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 684982628019224466, guid: b3c2e7590fcbf534eb1bae3dd05eb39f,
-        type: 3}
-      propertyPath: cableTailDefaultRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 684982628019224466, guid: b3c2e7590fcbf534eb1bae3dd05eb39f,
-        type: 3}
-      propertyPath: cableTailDefaultRotation.w
-      value: 0.70710677
-      objectReference: {fileID: 0}
-    - target: {fileID: 684982628019224466, guid: b3c2e7590fcbf534eb1bae3dd05eb39f,
-        type: 3}
-      propertyPath: cableTailDefaultRotation.x
-      value: 0.70710677
-      objectReference: {fileID: 0}
     - target: {fileID: 684982628019224467, guid: b3c2e7590fcbf534eb1bae3dd05eb39f,
         type: 3}
       propertyPath: m_Name

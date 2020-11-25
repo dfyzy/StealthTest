@@ -64,9 +64,11 @@ public class PlayerBehaviour : MonoBehaviour
 	public Quaternion hiddenTabletRotation = new Quaternion();
 
 	[Header("Cable")]
-	public Vector3 cableTailDefaultPosition = new Vector3(0.0f, 0.0f, 0.1f);
 	public float cableDefaultLength = 0.4f;
 	public Quaternion cableTailDefaultRotation = new Quaternion();
+	public float cableTailMaxRotOffset = 30.0f;
+	public float cableTailAngleRotSpeed = 5.0f;
+	public float cableTailForceFactor = 1.0f;
 	public TimeCurve cableTransitionCurve;
 
 	public Vector3 cableTailAimOffset = new Vector3(0.0f, 0.0f, 1.0f);
@@ -114,6 +116,9 @@ public class PlayerBehaviour : MonoBehaviour
 
 	Vector3 tabletRotation = Vector3.zero;
 
+	bool cableTailInit = false;
+	public Vector3 cableTailPrevPosition = Vector3.zero;
+	public Quaternion cableTailAngleRotOffset = Quaternion.identity;
 	bool cableMode = false;
 
 	void Start()
@@ -183,7 +188,7 @@ public class PlayerBehaviour : MonoBehaviour
 		transform.Translate(0.0f, 0.5f*(newHeight - oldHeight), 0.0f, Space.World);
 	}
 
-	void Update()
+	void FixedUpdate()
 	{
 		Vector3 cameraPosition = defaultCameraPosition;
 		Vector3 cameraEuler = Vector3.zero;
@@ -222,7 +227,9 @@ public class PlayerBehaviour : MonoBehaviour
 
 			currentSprint += Time.deltaTime/(sprinting ? sprintFadeInTime : -sprintFadeOutTime);
 			currentSprint = Mathf.Clamp(currentSprint, 0.0f, 1.0f);
-			targetCamera.fieldOfView = Mathf.Lerp(defaultFOV, Camera.HorizontalToVerticalFieldOfView(sprintFOV, targetCamera.aspect), currentSprint);
+
+			float vSprintFOV = Camera.HorizontalToVerticalFieldOfView(sprintFOV, targetCamera.aspect);
+			targetCamera.fieldOfView = Mathf.Lerp(defaultFOV, vSprintFOV, currentSprint);
 		}
 
 //		slide
@@ -373,7 +380,6 @@ public class PlayerBehaviour : MonoBehaviour
 		targetCamera.transform.localPosition = cameraPosition;
 		targetCamera.transform.localEulerAngles = cameraEuler;
 
-
 		//update tablet position
 		bool shouldHideTablet = sprinting || slideCurve.IsPlaying();
 		{
@@ -430,10 +436,33 @@ public class PlayerBehaviour : MonoBehaviour
 
 			Func<TransformState> defaultState = () =>
 			{
-				Quaternion rotation = Quaternion.Euler(new Vector3(0.0f, tablet.transform.eulerAngles.y, 0.0f))*cableTailDefaultRotation;
+				Quaternion localRotation = Quaternion.Euler(new Vector3(0.0f, tablet.transform.eulerAngles.y, 0.0f));
+				//Quaternion rotation = localRotation*cableTailDefaultRotation;
+
+				Vector3 radius = new Vector3(0.0f, -cableDefaultLength, 0.0f);
+				Vector3 projectedPosition = cable.GetFirstControlPoint(0.5f) + radius;
+
+				if (!cableTailInit)
+				{
+					cableTailInit = true;
+					cableTailPrevPosition = projectedPosition;
+				}
+
+				Vector3 force = cableTailPrevPosition - projectedPosition;
+				force.y = 0.0f;
+
+				Vector3 rotationAxis = Vector3.Cross(radius, force)/radius.sqrMagnitude;
+				rotationAxis = StolenMathf.MinSize(rotationAxis*cableTailForceFactor, cableTailMaxRotOffset*Mathf.Deg2Rad);
+
+				Quaternion rotOffset = StolenMathf.FromAngleAxis(rotationAxis);
+				cableTailAngleRotOffset = Quaternion.Lerp(cableTailAngleRotOffset, rotOffset, Time.deltaTime*cableTailAngleRotSpeed);
+
+				Quaternion rotation = cableTailAngleRotOffset*localRotation*cableTailDefaultRotation;
+
+				cableTailPrevPosition = projectedPosition;
 
 				return new TransformState(
-					cable.transform.position + rotation*new Vector3(0.0f, 0.0f, cableDefaultLength),
+					cable.GetFirstControlPoint(0.5f) + rotation*new Vector3(0.0f, 0.0f, cableDefaultLength),
 					rotation*cable.GetChainToWorldRotation()
 				);
 			};
