@@ -503,7 +503,7 @@ MonoBehaviour:
   cableTailDefaultRotation: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
   cableTailMaxRotOffset: 30
   cableTailAngleRotSpeed: 10
-  cableTailForceFactor: 0.5
+  cableTailForceFactor: 0.02
   cableTransitionCurve:
     curve:
       serializedVersion: 2
@@ -532,6 +532,7 @@ MonoBehaviour:
     stopOnClamp: 1
   cableTailAimOffset: {x: 0, y: -0.1, z: 0.5}
   cableTailAimRotation: {x: 0.27059805, y: 0.65328145, z: 0.27059805, w: 0.65328145}
+  cableTailAimLockOffset: 0.04
   cableTailPrevPosition: {x: 0, y: 0, z: 0}
   cableTailAngleRotOffset: {x: 0, y: 0, z: 0, w: 1}
 --- !u!114 &9218607173800617309

@@ -62,7 +62,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Tablet",
+                    "name": "TabletHide",
                     "type": "Button",
                     "id": "d59e31a9-4d65-42f5-9ffd-46629cf0da02",
                     "expectedControlType": "Button",
@@ -73,14 +73,6 @@
                     "name": "Zoom",
                     "type": "Button",
                     "id": "9b3eb848-fe18-4db1-9400-dbddfa269184",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Cable",
-                    "type": "Button",
-                    "id": "aece6439-a29b-46cd-9c23-8a474b8a9423",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -314,7 +306,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Tablet",
+                    "action": "TabletHide",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -326,17 +318,6 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Zoom",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "095517ab-8e56-4f6e-b48c-9cdbf7cd147a",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Cable",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

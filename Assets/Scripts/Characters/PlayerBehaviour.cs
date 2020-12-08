@@ -69,10 +69,8 @@ public class PlayerBehaviour : MonoBehaviour
 	public float cableTailMaxRotOffset = 30.0f;
 	public float cableTailAngleRotSpeed = 5.0f;
 	public float cableTailForceFactor = 1.0f;
-	public TimeCurve cableTransitionCurve;
 
-	public Vector3 cableTailAimOffset = new Vector3(0.0f, 0.0f, 1.0f);
-	public Quaternion cableTailAimRotation = new Quaternion();
+	public TimeCurve cableConnectCurve;
 
 	PlayerInput playerInput;
 	CharacterController controller;
@@ -84,7 +82,6 @@ public class PlayerBehaviour : MonoBehaviour
 	InputAction moveAction;
 	InputAction lookAction;
 	InputAction leanAction;
-	InputAction tabletAction;
 	InputAction zoomAction;
 
 	Vector2 cameraRotation;
@@ -115,11 +112,13 @@ public class PlayerBehaviour : MonoBehaviour
 	int cameraLayerMask = 0;
 
 	Vector3 tabletRotation = Vector3.zero;
+	bool tabletHideMode = false;
 
 	bool cableTailInit = false;
-	public Vector3 cableTailPrevPosition = Vector3.zero;
-	public Quaternion cableTailAngleRotOffset = Quaternion.identity;
-	bool cableMode = false;
+	Vector3 cableTailPrevPosition = Vector3.zero;
+	Quaternion cableTailAngleRotOffset = Quaternion.identity;
+
+	bool cableConnected = false;
 
 	void Start()
 	{
@@ -135,7 +134,6 @@ public class PlayerBehaviour : MonoBehaviour
 		moveAction = playerInput.actions["Move"];
 		lookAction = playerInput.actions["Look"];
 		leanAction = playerInput.actions["Lean"];
-		tabletAction = playerInput.actions["Tablet"];
 		zoomAction = playerInput.actions["Zoom"];
 
 		Cursor.lockState = CursorLockMode.Locked;
@@ -171,13 +169,14 @@ public class PlayerBehaviour : MonoBehaviour
 	{
 		if (value.isPressed)
 		{
+			//we cache "wanting" to toggle crouch instead of toggling it atm because this input can also cause slide
 			wantsToToggleCrouch = !wantsToToggleCrouch;
 		}
 	}
 
-	void OnCable()
+	void OnTabletHide()
 	{
-		cableMode = !cableMode;
+		tabletHideMode = !tabletHideMode;
 	}
 
 	void SetHeight(float newHeight)
@@ -188,7 +187,7 @@ public class PlayerBehaviour : MonoBehaviour
 		transform.Translate(0.0f, 0.5f*(newHeight - oldHeight), 0.0f, Space.World);
 	}
 
-	void FixedUpdate()
+	void Update()
 	{
 		Vector3 cameraPosition = defaultCameraPosition;
 		Vector3 cameraEuler = Vector3.zero;
@@ -383,7 +382,7 @@ public class PlayerBehaviour : MonoBehaviour
 		//update tablet position
 		bool shouldHideTablet = sprinting || slideCurve.IsPlaying();
 		{
-			tabletHideCurve.SetSpeed(shouldHideTablet || cableMode ? 1.0f : -1.0f);
+			tabletHideCurve.SetSpeed(shouldHideTablet || tabletHideMode ? 1.0f : -1.0f);
 			tabletHideCurve.Update((float factor) => {});
 			//bool tabletIsActive = !tabletHideCurve.HasStoppedAtEnd();
 			//tablet.SetActive(tabletIsActive);
@@ -429,8 +428,8 @@ public class PlayerBehaviour : MonoBehaviour
 
 		//cable stuff
 		{
-			cableTransitionCurve.SetSpeed(cableMode && !shouldHideTablet ? 1.0f : -1.0f);
-			cableTransitionCurve.Update((float factor) => {});
+			//cableTransitionCurve.SetSpeed(cableMode && !shouldHideTablet ? 1.0f : -1.0f);
+			//cableTransitionCurve.Update((float factor) => {});
 
 			Transform tail = cable.GetTail();
 
@@ -451,7 +450,7 @@ public class PlayerBehaviour : MonoBehaviour
 				Vector3 force = cableTailPrevPosition - projectedPosition;
 				force.y = 0.0f;
 
-				Vector3 rotationAxis = Vector3.Cross(radius, force)/radius.sqrMagnitude;
+				Vector3 rotationAxis = Vector3.Cross(radius, force)/(radius.sqrMagnitude*Time.deltaTime);
 				rotationAxis = StolenMathf.MinSize(rotationAxis*cableTailForceFactor, cableTailMaxRotOffset*Mathf.Deg2Rad);
 
 				Quaternion rotOffset = StolenMathf.FromAngleAxis(rotationAxis);
@@ -467,15 +466,26 @@ public class PlayerBehaviour : MonoBehaviour
 				);
 			};
 
-			Func<TransformState> aimState = () =>
+			Func<TransformState> connectedState = () =>
 			{
+				DeviceDisplay display = null;//interactionHit.collider.GetComponent<DeviceDisplay>();
+				if (display)
+				{
+					Transform anchor = display.GetCableAnchor();
+					/*return new TransformState(
+						anchor.position - anchor.forward*cableTailAimLockOffset,
+						anchor.rotation*cable.GetChainToWorldRotation()
+					);*/
+				}
+
+				//TODO: change this?
 				return new TransformState(
-					targetCamera.transform.position + targetCamera.transform.rotation*cableTailAimOffset,
-					targetCamera.transform.rotation*cableTailAimRotation
+					cable.transform.position,
+					cable.transform.rotation
 				);
 			};
 
-			TransformState result = TransformState.InterpolateDefered(defaultState, aimState, cableTransitionCurve.GetCurrentValue());
+			TransformState result = TransformState.InterpolateDefered(defaultState, connectedState, cableConnectCurve.GetCurrentValue());
 			result.Apply(tail.transform);
 		}
 		//
