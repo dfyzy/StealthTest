@@ -12,8 +12,11 @@ public class DeviceDisplay : MonoBehaviour
 
 	void Awake()
 	{
-		renderer = gameObject.GetComponent<Renderer>();
+		renderer = transform.Find("Mesh").GetComponent<Renderer>();
 		cableAnchor = transform.Find("CableAnchor");
+
+		InteractionPoint interaction = transform.Find("InteractionPoint").GetComponent<InteractionPoint>();
+		interaction.onUse += ConnectCable;
 
 		OnDeviceTurnOff();
 	}
@@ -21,6 +24,10 @@ public class DeviceDisplay : MonoBehaviour
 	public Transform GetCableAnchor()
 	{
 		return cableAnchor;
+	}
+
+	void ConnectCable()
+	{
 	}
 
 	void OnDeviceTurnOn()

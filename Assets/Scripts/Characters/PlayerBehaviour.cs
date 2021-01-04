@@ -356,7 +356,7 @@ public class PlayerBehaviour : MonoBehaviour
 				float radius = controller.radius;
 
 				RaycastHit hit;
-				if (Physics.SphereCast(origin, radius, diffNormalized, out hit, diffSize, cameraLayerMask, QueryTriggerInteraction.Ignore))
+				if (Physics.SphereCast(origin, radius, diffNormalized, out hit, diffSize, cameraLayerMask))
 				{
 					if (hit.distance < diffSize)
 					{

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2572859540721122924}
   - component: {fileID: 4746183477420836009}
   - component: {fileID: 1940003432952353440}
-  - component: {fileID: 2229458983606847477}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -82,20 +81,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2229458983606847477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 356810635220336348}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e5c701db55544843a4d7b5168e1fd87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onColor: {r: 0, g: 1, b: 0, a: 1}
-  offColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &2018041810696070473
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,6 +120,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4213631571180986196}
+  - component: {fileID: 6826823890194454581}
   m_Layer: 0
   m_Name: DeviceDisplay
   m_TagString: Untagged
@@ -159,6 +145,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6826823890194454581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5696737633479610315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e5c701db55544843a4d7b5168e1fd87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onColor: {r: 0, g: 1, b: 0, a: 1}
+  offColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1001 &3597403309792813589
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -220,6 +220,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7824213808703068906, guid: 591fe11b740cba24ba520ee6ac53a721,
+        type: 3}
+      propertyPath: text
+      value: Connect
       objectReference: {fileID: 0}
     - target: {fileID: 8061369784630215968, guid: 591fe11b740cba24ba520ee6ac53a721,
         type: 3}
